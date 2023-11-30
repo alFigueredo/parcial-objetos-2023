@@ -1,0 +1,168 @@
+import lugares.*
+import personas.*
+
+describe "La persona prefiere lugares tranquilos" {
+	
+	const persona = new Persona(
+		preferenciaVacaciones = new LugaresTranquilos(),
+		presupuestoMaximo = 1000000
+	)
+	
+	test "La ciudad no es tranquila" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=30,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.notThat(persona.tienePreferencia(ciudad))
+	}
+	
+	test "La ciudad es tranquila" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=15,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.that(persona.tienePreferencia(ciudad))
+	}
+	
+	test "El pueblo no es tranquilo" {
+		const pueblo = new Pueblo(
+			nombre = "Nombre par",
+			extension = 100,
+			fundacion = 1750,
+			provincia = "Rio Negro"
+		)
+		assert.notThat(persona.tienePreferencia(pueblo))
+	}
+	
+	test "El pueblo es tranquilo" {
+		const pueblo = new Pueblo(
+			nombre = "Nombre par",
+			extension = 100,
+			fundacion = 1750,
+			provincia = "La Pampa"
+		)
+		assert.that(persona.tienePreferencia(pueblo))
+	}
+	
+	test "El balneario no es tranquilo" {
+		const balneario = new Balneario(
+			nombre = "Nombre par",
+			marPeligroso = true,
+			metrosDePlayaPromedio = 400,
+			tienePeatonal = true 
+		)
+		assert.notThat(persona.tienePreferencia(balneario))
+	}
+	
+	test "El balneario es tranquilo" {
+		const balneario = new Balneario(
+			nombre = "Nombre par",
+			marPeligroso = true,
+			metrosDePlayaPromedio = 400,
+			tienePeatonal = false 
+		)
+		assert.that(persona.tienePreferencia(balneario))
+	}
+}
+
+describe "La persona prefiere lugares divertidos" {
+	
+	const persona = new Persona(
+		preferenciaVacaciones = new LugaresDivertidos(),
+		presupuestoMaximo = 1000000
+	)
+	
+	test "El lugar tiene un nombre con cantidad impar de letras" {
+		const lugar = new Ciudad(
+			nombre="Impar",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.notThat(persona.tienePreferencia(lugar))
+	}
+	
+	test "El pueblo no es divertido" {
+		const pueblo = new Pueblo(
+			nombre = "Nombre par",
+			extension = 100,
+			fundacion = 1850,
+			provincia = "Rio Negro"
+		)
+		assert.notThat(persona.tienePreferencia(pueblo))
+	}
+	
+	test "La ciudad es divertida" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.that(persona.tienePreferencia(ciudad))
+	}
+}
+
+describe "La persona prefiere lugares raros" {
+	
+	const persona = new Persona(
+		preferenciaVacaciones = new LugaresRaros(),
+		presupuestoMaximo = 1000000
+	)
+	
+	test "El lugar no es raro" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.notThat(persona.tienePreferencia(ciudad))
+	}
+	
+	test "El lugar es raro" {
+		const ciudad = new Ciudad(
+			nombre="Nombre letras par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.that(persona.tienePreferencia(ciudad))
+	}
+	
+}
+
+describe "La persona tiene varios criterios" {
+	
+	const preferencia = new CombinacionCriteriosLugares(
+		criterios=#{new LugaresTranquilos(), new LugaresRaros()}
+	)
+	const persona = new Persona(
+		preferenciaVacaciones = preferencia,
+		presupuestoMaximo = 1000000
+	)
+	
+	test "El lugar no coincide con ninguna preferencia" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=30,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.notThat(persona.tienePreferencia(ciudad))
+	}
+	
+	test "El lugar coincide con alguna preferencia" {
+		const ciudad = new Ciudad(
+			nombre="Nombre letras par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=30,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.that(persona.tienePreferencia(ciudad))
+	}
+}

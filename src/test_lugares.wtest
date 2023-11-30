@@ -1,0 +1,113 @@
+import lugares.*
+
+describe "El lugar nunca es divertido" {
+	
+	test "El lugar tiene un nombre con cantidad impar de letras" {
+		const lugar = new Ciudad(
+			nombre="Impar",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.notThat(lugar.lugarDivertido())
+	}
+}
+
+describe "El lugar es una ciudad" {
+	
+	test "La ciudad posee pocas atracciones" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco"]
+		)
+		assert.notThat(ciudad.lugarDivertido())
+	}
+	
+	test "La ciudad posee pocos habitantes" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=50000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.notThat(ciudad.lugarDivertido())
+	}
+	
+	test "La ciudad es divertida" {
+		const ciudad = new Ciudad(
+			nombre="Nombre par",
+			cantidadHabitantes=200000,
+			decibelesPromedio=20,
+			atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+		)
+		assert.that(ciudad.lugarDivertido())
+	}
+}
+
+describe "El lugar es un pueblo" {
+	
+	test "El pueblo no es divertido" {
+		const pueblo = new Pueblo(
+			nombre = "Nombre par",
+			extension = 100,
+			fundacion = 1850,
+			provincia = "Rio Negro"
+		)
+		assert.notThat(pueblo.lugarDivertido())
+	}
+	
+	test "El pueblo es viejo" {
+		const pueblo = new Pueblo(
+			nombre = "Nombre par",
+			extension = 100,
+			fundacion = 1750,
+			provincia = "Rio Negro"
+		)
+		assert.that(pueblo.lugarDivertido())
+	}
+	
+	test "El pueblo es del Litoral" {
+		const pueblo = new Pueblo(
+			nombre = "Nombre par",
+			extension = 100,
+			fundacion = 1850,
+			provincia = "Corrientes"
+		)
+		assert.that(pueblo.lugarDivertido())
+	}
+}
+
+describe "El lugar es un balneario" {
+	
+	test "El balneario no tiene mucha playa" {
+		const balneario = new Balneario(
+			nombre = "Nombre par",
+			marPeligroso = true,
+			metrosDePlayaPromedio = 200,
+			tienePeatonal = true 
+		)
+		assert.notThat(balneario.lugarDivertido())
+	}
+	
+	test "El balneario no tiene un mar peligroso" {
+		const balneario = new Balneario(
+			nombre = "Nombre par",
+			marPeligroso = false,
+			metrosDePlayaPromedio = 400,
+			tienePeatonal = true 
+		)
+		assert.notThat(balneario.lugarDivertido())
+	}
+	
+	test "El balneario es divertido" {
+		const balneario = new Balneario(
+			nombre = "Nombre par",
+			marPeligroso = true,
+			metrosDePlayaPromedio = 400,
+			tienePeatonal = true 
+		)
+		assert.that(balneario.lugarDivertido())
+	}
+}

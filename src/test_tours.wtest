@@ -1,0 +1,121 @@
+import lugares.* 
+import personas.*
+import tours.*
+
+describe "Tours" {
+	
+	const preferencia = new CombinacionCriteriosLugares(
+		criterios=#{new LugaresTranquilos(), new LugaresRaros()}
+	)
+	const persona1 = new Persona(
+		preferenciaVacaciones = preferencia,
+		presupuestoMaximo = 1000000
+	)
+	const persona2 = new Persona(
+		preferenciaVacaciones = preferencia,
+		presupuestoMaximo = 1000000
+	)
+	const ciudad = new Ciudad(
+		nombre="Nombre letras par",
+		cantidadHabitantes=200000,
+		decibelesPromedio=30,
+		atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+	)
+	const pueblo = new Pueblo(
+		nombre = "Nombre par",
+		extension = 100,
+		fundacion = 1750,
+		provincia = "La Pampa"
+	)
+	
+	test "La persona no posee suficiente presupuesto" {
+		
+		const tour = new Tour(
+			cantPersonasRequeridas = 3,
+			fechaSalida = new Date(day=7, month=1, year=2023),
+			montoAPagarPorPersona = 800000,
+			personas = #{persona1, persona2},
+			listaLugares = [ciudad, pueblo]
+		)
+		const persona = new Persona(
+			preferenciaVacaciones = preferencia,
+			presupuestoMaximo = 700000
+		)
+		assert.throwsExceptionLike(
+			new DomainException(message="La persona no posee el presupuesto suficiente"),
+			{tour.agregarPersona(persona)}
+		)
+	}
+	
+	test "La persona no tiene preferencia por todos los lugares" {
+		
+		const tour = new Tour(
+			cantPersonasRequeridas = 3,
+			fechaSalida = new Date(day=7, month=1, year=2023),
+			montoAPagarPorPersona = 800000,
+			personas = #{persona1, persona2},
+			listaLugares = [ciudad, pueblo]
+		)
+		const persona = new Persona(
+			preferenciaVacaciones = new LugaresTranquilos(),
+			presupuestoMaximo = 1000000
+		)
+		assert.throwsExceptionLike(
+			new DomainException(message="No todos los lugares son adecuados para la persona"),
+			{tour.agregarPersona(persona)}
+		)
+	}
+	
+	test "La persona puede ser agregada al tour" {
+		
+		const tour = new Tour(
+			cantPersonasRequeridas = 3,
+			fechaSalida = new Date(day=7, month=1, year=2023),
+			montoAPagarPorPersona = 800000,
+			personas = #{persona1, persona2},
+			listaLugares = [ciudad, pueblo]
+		)
+		const persona = new Persona(
+			preferenciaVacaciones = preferencia,
+			presupuestoMaximo = 1000000
+		)
+		tour.agregarPersona(persona)
+		assert.that(tour.tourConfirmado())
+	}
+	
+	test "La persona no puede ser agregada a un tour confirmado" {
+		
+		const tour = new Tour(
+			cantPersonasRequeridas = 2,
+			fechaSalida = new Date(day=7, month=1, year=2023),
+			montoAPagarPorPersona = 800000,
+			personas = #{persona1, persona2},
+			listaLugares = [ciudad, pueblo]
+		)
+		const persona = new Persona(
+			preferenciaVacaciones = preferencia,
+			presupuestoMaximo = 1000000
+		)
+		assert.throwsExceptionLike(
+			new DomainException(message="El tour ya se encuentra confirmado, no es posible incorporar más gente"),
+			{tour.agregarPersona(persona)}
+		)
+	}
+	
+	test "Una persona puede ser desvinculada del tour" {
+		
+		const persona = new Persona(
+			preferenciaVacaciones = preferencia,
+			presupuestoMaximo = 1000000
+		)
+		const tour = new Tour(
+			cantPersonasRequeridas = 3,
+			fechaSalida = new Date(day=7, month=1, year=2023),
+			montoAPagarPorPersona = 800000,
+			personas = #{persona1, persona2, persona},
+			listaLugares = [ciudad, pueblo]
+		)
+		tour.desvincularPersona(persona)
+		assert.that(!tour.tourConfirmado())
+	}
+}

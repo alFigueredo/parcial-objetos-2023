@@ -1,0 +1,68 @@
+import lugares.*
+import personas.*
+import tours.*
+import reportes.*
+
+describe "Reportes" {
+	
+	const preferencia = new CombinacionCriteriosLugares(
+		criterios=#{new LugaresTranquilos(), new LugaresRaros()}
+	)
+	const persona1 = new Persona(
+		preferenciaVacaciones = preferencia,
+		presupuestoMaximo = 1000000
+	)
+	const persona2 = new Persona(
+		preferenciaVacaciones = preferencia,
+		presupuestoMaximo = 1000000
+	)
+	const persona3 = new Persona(
+		preferenciaVacaciones = preferencia,
+		presupuestoMaximo = 1000000
+	)
+	const ciudad = new Ciudad(
+		nombre="Nombre letras par",
+		cantidadHabitantes=200000,
+		decibelesPromedio=30,
+		atraccionesTuristicas=["Fuente", "Plaza", "Obelisco", "Rosedal"]
+	)
+	const pueblo = new Pueblo(
+		nombre = "Nombre par",
+		extension = 100,
+		fundacion = 1750,
+		provincia = "La Pampa"
+	)
+	const tour1 = new Tour(
+		cantPersonasRequeridas = 3,
+		fechaSalida = new Date(day=7, month=1, year=new Date().year()),
+		montoAPagarPorPersona = 800000,
+		personas = #{persona1, persona2},
+		listaLugares = [ciudad, pueblo]
+	)
+	const tour2 = new Tour(
+		cantPersonasRequeridas = 2,
+		fechaSalida = new Date(day=7, month=1, year=new Date().minusYears(1).year()),
+		montoAPagarPorPersona = 700000,
+		personas = #{persona1, persona2},
+		listaLugares = [ciudad, pueblo]
+	)
+	const tour3 = new Tour(
+		cantPersonasRequeridas = 3,
+		fechaSalida = new Date(day=7, month=1, year=new Date().year()),
+		montoAPagarPorPersona = 600000,
+		personas = #{persona1, persona2, persona3},
+		listaLugares = [ciudad, pueblo]
+	)
+	const reporte = new Reporte(
+		tours=#{tour1, tour2, tour3}
+	)
+	
+	test "Tours pendientes de confirmacion" {
+		assert.equals(1, reporte.toursPendientesDeConfirmacion().size())
+		assert.that(reporte.toursPendientesDeConfirmacion().contains(tour1))
+	}
+	
+	test "Monto total de los tours que salen este anio"{
+		assert.equals(3400000, reporte.montoTotalToursEsteAnio())
+	}
+}
