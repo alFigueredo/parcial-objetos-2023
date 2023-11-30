@@ -24,7 +24,6 @@ class Tour {
 	method validarTourNoConfirmado() {
 		if (self.tourConfirmado())
 			throw new DomainException(message="El tour ya se encuentra confirmado, no es posible incorporar más gente")
-		
 	}
 	method tourConfirmado() = personas.size()==cantPersonasRequeridas
 	method desvincularPersona(persona) = personas.remove(persona)
