@@ -8,20 +8,23 @@ class Tour {
 	const personas = #{}
 	
 	method agregarPersona(persona) {
-		if (self.personaAdecuada(persona))
-			self.incorporarPersona(persona)
-		else if (!persona.puedePagarElTour(montoAPagarPorPersona))
+		self.validarPersonaAdecuada(persona)
+		self.incorporarPersona(persona)
+	}
+	method incorporarPersona(persona) {
+		self.validarTourNoConfirmado()
+		personas.add(persona)
+	}
+	method validarPersonaAdecuada(persona) {
+		if (!persona.puedePagarElTour(montoAPagarPorPersona))
 			throw new DomainException(message="La persona no posee el presupuesto suficiente")
 		else if (!persona.lugaresAdecuados(listaLugares))
 			throw new DomainException(message="No todos los lugares son adecuados para la persona")
 	}
-	method personaAdecuada(persona) = persona.puedePagarElTour(montoAPagarPorPersona) &&
-		persona.lugaresAdecuados(listaLugares)
-	method incorporarPersona(persona) {
-		if (!self.tourConfirmado())
-			personas.add(persona)
-		else
+	method validarTourNoConfirmado() {
+		if (self.tourConfirmado())
 			throw new DomainException(message="El tour ya se encuentra confirmado, no es posible incorporar más gente")
+		
 	}
 	method tourConfirmado() = personas.size()==cantPersonasRequeridas
 	method desvincularPersona(persona) = personas.remove(persona)
