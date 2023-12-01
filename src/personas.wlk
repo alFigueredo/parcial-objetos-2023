@@ -1,7 +1,7 @@
 import lugares.*
 
 class Persona {
-	var preferenciaVacaciones
+	var property preferenciaVacaciones
 	var property presupuestoMaximo
 	method tienePreferencia(lugar) = preferenciaVacaciones.tienePreferencia(self, lugar)
 	method puedePagarElTour(montoAPagar) = montoAPagar<=presupuestoMaximo
