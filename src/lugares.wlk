@@ -27,7 +27,7 @@ class Pueblo inherits Lugar {
 	
 	override method esDivertido() = self.puebloViejo() || self.esDelLitoral()
 	method puebloViejo() = fundacion<1800
-	method esDelLitoral() = #{"Entre Rios", "Entre Ríos", "Corrientes", "Misiones"}.contains(provincia)
+	method esDelLitoral() = #{"Entre Ríos", "Corrientes", "Misiones"}.contains(provincia)
 	method lugarTranquilo() = self.esDeLaPampa()
 	method esDeLaPampa() = provincia=="La Pampa"
 }
